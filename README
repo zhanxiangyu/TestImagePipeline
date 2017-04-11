@@ -1,0 +1,14 @@
+本次项目是对scrapy 中ImagePipeline的测试
+imagepipeline 会自动下载图片，
+几个基本的配置
+ITEM_PIPELINES = ['demo.pipelines.MyImagesPipeline']  # ImagePipeline的自定义实现类
+IMAGES_STORE = 'D:\\dev\\python\\scrapy\\demo\\img'   # 图片存储路径
+IMAGES_EXPIRES = 90                                   # 过期天数
+IMAGES_MIN_HEIGHT = 100                               # 图片的最小高度
+IMAGES_MIN_WIDTH = 100                                # 图片的最小宽度
+# 图片的尺寸小于IMAGES_MIN_WIDTH*IMAGES_MIN_HEIGHT的图片都会被过滤
+
+pipeline中重写了get_media_requests方法和item_completed方法
+get_media_requests，并返回一个Request对象，这些请求对象将被Pipeline处理，当完成下载后，结果将发送到item_completed方法
+这些结果为一个二元组的list，每个元祖的包含(success, image_info_or_failure)。 * success: boolean值，true表示成功下载
+ * image_info_or_error：如果success=true，image_info_or_error词典包含以下键值对。失败则包含一些出错信息
